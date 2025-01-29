@@ -59,9 +59,9 @@ async function getAllPosts(postID, userID) {
             foundEnd = true
         }
 
-        if (totalPosts > 10) {
-            foundEnd = true
-        }
+        // if (totalPosts > 10) {
+        //     foundEnd = true
+        // }
     }
 
     // console.log(foundPosts)
@@ -69,31 +69,32 @@ async function getAllPosts(postID, userID) {
     var lengthSummary = Math.floor(totalChars / totalPosts);
     if (lengthSummary > 400) lengthSummary = 400;
 
-    var fullPromptSummary = `You will create a summary of ${totalPosts} on the social media platform Interact.\t
+    var fullPromptSummary = `You will create a summary of ${totalPosts} on the social media platform Interact.
+Interact is a social media platform where users can create posts and reply to each other.
 You will summarize the converstation between ${usersTotal.length}. 
-You will summarize the posts in ${lengthSummary} characters.
+You will summarize the posts in ${lengthSummary} characters. You must not surpass 512 characters.
 The summary must be in one paragraph, with no line breaks.
-Make sure it does not surpass 512 characters.
 You will use the usernames, and keep the @ symbol. 
-You will make sure summaries include correct username for the section of the conversation.
-You will make sure to keep the order of the posts in the summary.
+All pronouns must be neutral, as their and they.
+If you choose to use usernames, you must use the correct username for the section of the conversation.
 Do not include any extra information other than your summary.
 Write the summary in 3rd person, as if you are a neutral observer.
-All pronouns must be neutral, as their and they.
-Take your time and make sure the summary is accurate.
-Make sure to include all relevant details.
-This summary will be for someone who is not part of the conversation.
+The summary must be accurate and concise.
+Make sure to include relevant details from the posts.
+This summary will be for someone who is not part of the conversation, and needs to understand the conversation.
 You will not include any personal opinions.
 You will not include any personal information.
-You will not include any information that is not in the conversation.
 You will not include any information that is not relevant to the conversation.
 You may give more context if needed.
 You will not imagine any information.
 You must understand the order of the posts they are in.
 Posts provided are in the order of old to new.
-You will not hold any bias.
+You will not hold any personal bias.
 Make sure any context you include is relevant.
 You will not simply copy and paste the posts.
+Remember to keep the summary concise.
+Remember to not surpass 450 characters in the summary.
+Remember the summary must be around ${lengthSummary} characters.
 You will summarize the following posts: [`;
 
     for (const post of foundPosts.reverse()) {
