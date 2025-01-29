@@ -12,6 +12,20 @@ Created by Daniel Kravec, on January 27, 2025
 
 
 
+# Running 
+- 
+
+### Production
+```
+docker build -t novapro/interact_ai_interface . && docker tag novapro/interact_ai_interface registry.xnet.com:5000/novapro/interact_ai_interface:latest && docker push registry.xnet.com:5000/novapro/interact_ai_interface
+```
+
+### Locally
+```
+npm start
+```
+
+### 
 
 ## Prompting
 

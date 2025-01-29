@@ -69,26 +69,32 @@ async function getAllPosts(postID, userID) {
     var lengthSummary = Math.floor(totalChars / totalPosts);
     if (lengthSummary > 400) lengthSummary = 400;
 
-    var fullPromptSummary = `
-You will create a summary of ${totalPosts} on the social media platform Interact.\t
+    var fullPromptSummary = `You will create a summary of ${totalPosts} on the social media platform Interact.\t
 You will summarize the converstation between ${usersTotal.length}. 
 Summary should remain to around ${lengthSummary} characters, in one paragraph. 
+Make sure it does not surpass 512 characters.
 You will use the usernames, and keep the @ symbol. 
 Do not include any extra information other than your summary.
 Write the summary in 3rd person. 
 All pronouns must be neutral, as their and they.
 Take your time and make sure the summary is accurate.
-You will summarize the following posts: [\n
-    `;
-    // var fullPromptReplyIdea = `You ar`
-
-    // console.log(fullPromptSummary)
-
-    for (const post of foundPosts) {
-        fullPromptSummary += `{'username': '${post.username}': 'content':'${post.content}'},\n`;
+Make sure to include all relevant details.
+This summary will be for someone who is not part of the conversation.
+You will not include any personal opinions.
+You will not include any personal information.
+You will not include any information that is not in the conversation.
+You will not include any information that is not relevant to the conversation.
+You may give more context if needed.
+You will not imagine any information.
+You must understand the order of the posts they are in.
+Posts provided are in the order of old to new.
+You will not hold any bias.
+You will summarize the following posts: [`;
+    for (const post of foundPosts.reverse()) {
+        fullPromptSummary += `{'order':${totalPosts-post.index}, 'username': '${post.username}': 'content':'${post.content}'},\n`;
     };
-
     fullPromptSummary += `]`;
+
     console.log(fullPromptSummary)
 
 
