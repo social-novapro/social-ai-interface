@@ -1,4 +1,5 @@
 const { fetchRequest } = require("./fetchRequest");
+require('dotenv').config({ path: './env/prod.env' })
 
 async function ollamaRequest(prompt) {
     const body = {
@@ -7,7 +8,7 @@ async function ollamaRequest(prompt) {
         stream: false
     };
 
-    const ollamaResponse = await fetchRequest("/api/generate", "POST", {}, body, "http://localhost:11434"); 
+    const ollamaResponse = await fetchRequest("/api/generate", "POST", {}, body, process.env.OLLAMA_URL); 
     return ollamaResponse;
 }
 
