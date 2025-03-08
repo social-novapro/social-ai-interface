@@ -25,6 +25,10 @@ docker build -t novapro/interact_ai_interface . && docker tag novapro/interact_a
 npm start
 ```
 
+check out 
+http://localhost:5004/v1/serverStatus
+
+
 ### 
 
 ## Prompting
@@ -33,4 +37,13 @@ npm start
 You are created to summarize posts on interact. You will summarize the converstation between ${usersTotal.length}. Summary should remain to around 300 characters, in one paragraph. You will summarize the following posts: \n`
 
 fullPromptSummary += `${post.username} said: ${post.content}.\n
+```
+
+install and run ollama in a docker container
+```
+docker pull ollama/ollama
+
+docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+docker exec -it ollama ollama run llama3.2
 ```

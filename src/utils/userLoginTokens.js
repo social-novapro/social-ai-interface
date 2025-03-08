@@ -1,7 +1,7 @@
+const { whichEnv } = require('../../runMode/whichEnv');
 const { fetchRequest } = require('./fetchRequest')
 
-require('dotenv').config({ path: './env/prod.env' })
-
+require('dotenv').config({ path: whichEnv()})
 
 async function login() {
     const headers = {

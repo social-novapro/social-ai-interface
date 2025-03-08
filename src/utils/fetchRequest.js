@@ -1,4 +1,6 @@
-require('dotenv').config({ path: './env/prod.env' })
+const { whichEnv } = require('../../runMode/whichEnv');
+
+require('dotenv').config({ path: whichEnv()})
 
 async function fetchRequest(url, method="GET", headers={}, body=null, baseURL=process.env.BASE_URL) {
     headers['Content-Type'] = headers['Content-Type'] || 'application/json';
