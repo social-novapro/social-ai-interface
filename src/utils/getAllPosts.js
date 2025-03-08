@@ -59,9 +59,9 @@ async function getAllPosts(postID, userID) {
             foundEnd = true
         }
 
-        // if (totalPosts > 10) {
-        //     foundEnd = true
-        // }
+        if (totalPosts > 10) {
+            foundEnd = true
+        }
     }
 
     // console.log(foundPosts)
@@ -69,7 +69,8 @@ async function getAllPosts(postID, userID) {
     var lengthSummary = Math.floor(totalChars / totalPosts);
     if (lengthSummary > 400) lengthSummary = 400;
 
-    var fullPromptSummary = `You will create a summary of ${totalPosts} on the social media platform Interact.
+   /*
+    var fullPromptSummary = `You will create a summary of ${totalPosts} posts on the social media platform Interact.
 Interact is a social media platform where users can create posts and reply to each other.
 You will summarize the converstation between ${usersTotal.length}. 
 You will summarize the posts in ${lengthSummary} characters. You must not surpass 512 characters.
@@ -87,7 +88,6 @@ You will not include any personal information.
 You will not include any information that is not relevant to the conversation.
 You may give more context if needed.
 You will not imagine any information.
-You must understand the order of the posts they are in.
 Posts provided are in the order of old to new.
 You will not hold any personal bias.
 Make sure any context you include is relevant.
@@ -97,6 +97,45 @@ Remember to not surpass 450 characters in the summary.
 Remember the summary must be around ${lengthSummary} characters.
 You will summarize the following posts: [`;
 
+var fullPromptSummary = `You will create a summary of ${totalPosts} posts on the social media platform Interact, where users create posts and reply to each other. Summarize the conversation between ${usersTotal.length} users in ${lengthSummary} characters, not exceeding 450 characters.
+Write in one paragraph with no line breaks.
+Use usernames as they appear, keeping the @ symbol.
+Use gender-neutral pronouns ("they," "their").
+The summary must be accurate, concise, and relevant for someone who was not part of the conversation.
+Do not include personal opinions, extra information, or irrelevant details.
+Provide necessary context only if essential, but do not add or imagine any details.
+Do not copy-paste the posts; rephrase them meaningfully.
+Posts are provided in chronological order (oldest to newest).
+Maintain neutrality and avoid personal bias.
+Summarize the following posts: [`;
+
+    var fullPromptSummary = `
+Summarize ${totalPosts} posts from the social media platform Interact in one paragraph, not exceeding 450 characters. The summary must:
+Be concise, accurate, and neutral—no opinions, assumptions, or unnecessary details.
+Use usernames with the @ symbol when referring to users.
+Maintain gender-neutral pronouns (they/their).
+Not copy-paste posts—rephrase them meaningfully.
+Stick to relevant details and provide minimal necessary context.
+Not exceed ${lengthSummary} characters (absolute max: 450).
+Stay in third person, as a neutral observer.
+Not use bullet points or formatting, just a single paragraph.
+Posts are listed in order from oldest to newest.
+Summarize the following posts: [`
+*/
+
+var fullPromptSummary = `
+You will generate a single-paragraph summary of ${totalPosts} posts from Interact.
+The summary must be one paragraph with no bullet points, no lists, and no extra formatting.
+It must not exceed ${lengthSummary} characters (absolute max: 450).
+Do not add platform names like Discord—this is Interact.
+Only summarize key points accurately, without unnecessary details.
+Use @usernames when referring to users.
+Use they/them pronouns to stay gender-neutral.
+Do not copy and paste the posts—rephrase and summarize meaningfully.
+Do not add assumptions, opinions, or extra commentary.
+Context is allowed only if strictly necessary.
+Do not just list topics—write a real summary in sentence form. Here are the posts, in order from oldest to newest:
+[`
     for (const post of foundPosts.reverse()) {
         fullPromptSummary += `{'order':${totalPosts-post.index}, 'username': '${post.username}': 'content':'${post.content}'}${post.index==0 ? `]` : ','}\n`;
     };
