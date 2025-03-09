@@ -2,9 +2,9 @@ const { whichEnv } = require("../../runMode/whichEnv");
 const { fetchRequest } = require("./fetchRequest");
 require('dotenv').config({ path: whichEnv()})
 
-async function ollamaRequest(prompt) {
+async function ollamaRequest(prompt, model="llama3.2") {
     const body = {
-        model: "llama3.2",
+        model: model,
         prompt: prompt,
         stream: false
     };
@@ -12,11 +12,5 @@ async function ollamaRequest(prompt) {
     const ollamaResponse = await fetchRequest("/api/generate", "POST", {}, body, process.env.OLLAMA_URL); 
     return ollamaResponse;
 }
-
-// curl http://localhost:11434/api/generate -d '{
-//   "model": "llama3.2",
-//   "prompt": "Why is the sky blue?",
-//   "stream": false
-// }
 
 module.exports = { ollamaRequest }

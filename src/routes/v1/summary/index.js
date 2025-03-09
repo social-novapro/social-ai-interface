@@ -3,7 +3,6 @@ const { summarizeThread } = require('../../../utils/ai_requests/summary');
 const { reqToHeaders } = require('../../../utils/reqToHeaders');
 
 router.get('/:postID', async (req, res) => {
-    console.log('GET /summary/:postID');
     const headers = reqToHeaders(req);
     const summerized = await summarizeThread({ headers, postID: req.params.postID });
 

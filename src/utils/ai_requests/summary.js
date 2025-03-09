@@ -1,12 +1,13 @@
+const interactAISummary = require("../../schemas/interactAISummary");
 const { checktime } = require("../checktime");
 const { fetchRequest } = require("../fetchRequest");
 const { ollamaRequest } = require("../ollamaRequest");
+const { summary } = require("./prompts.json");
+const { v4: UUIDv4 } = require('uuid');
 
 async function summarizeThread({ headers, postID }) {
     const startTime = checktime();
-
     const foundThread = await fetchRequest(`posts/get/thread/${postID}`, "GET", headers);
-    console.log(foundThread)
 
     const foundPosts = []
     var totalChars = 0;
@@ -21,10 +22,10 @@ async function summarizeThread({ headers, postID }) {
     // push first post
     foundThread.parentPosts.reverse();
     foundThread.parentPosts.push(foundThread.post);
-    foundThread.parentPosts.reverse(); // puts main post at start of array
+    foundThread.parentPosts.reverse(); 
+    //^^ puts main post at start of array
     
     for (const foundPost of foundThread.parentPosts) {
-        console.log(foundPost.postData.content.split('\n').join(' ') + ' ' + foundPost.userData.username + ' ' + foundPost.postData.timestamp)
         foundPosts.push({
             username: `@${foundPost.userData.username}`,
             postID: foundPost.userData._id,
@@ -44,58 +45,64 @@ async function summarizeThread({ headers, postID }) {
 
         totalPosts++;
         totalChars += foundPost.postData.content.length;
-
-        // if (foundPost.postData.replyData?.postID) {
-        //     nextPostID = foundPost.postData.replyData.postID
-        // } else {
-        //     foundEnd = true
-        // }
-
-        // if (totalPosts > 10) {
-        //     foundEnd = true
-        // }
     }
+
+    if (foundUsername == null) {
+        const foundUser = await fetchRequest(`users/get/${headers.userID}`, "GET");
+        foundUsername = foundUser.userData.username;
+    }
+
     var lengthSummary = Math.floor(totalChars / totalPosts);
     if (lengthSummary > 400) lengthSummary = 400;
 
-    var fullPromptSummary = `
-        You will generate a single-paragraph summary of ${totalPosts} posts from Interact.
-        The summary must be one paragraph with no bullet points, no lists, and no extra formatting.
-        It must not exceed ${lengthSummary} characters (absolute max: 450).
-        Do not add platform names like Discord—this is Interact.
-        Only summarize key points accurately, without unnecessary details.
-        Use @usernames when referring to users.
-        Use they/them pronouns to stay gender-neutral.
-        Do not copy and paste the posts—rephrase and summarize meaningfully.
-        Do not add assumptions, opinions, or extra commentary.
-        Context is allowed only if strictly necessary.
-        If unable to summarize a post, write "Unable to summarize this post, not enough context provided."
-        Do not just list topics—write a real summary in sentence form. Here are the posts, in order from oldest to newest:
-        [
-    `;
+    const dataUse = {
+        totalPosts,
+        totalChars
+    }
+
+    var fullPromptSummary = summary.prompt.join('\n');
+    for (const replacement in summary.replacements) {
+        for (var i=0; i<replacement.occurrences; i++) {
+            fullPromptSummary = fullPromptSummary.replace(`{${replacement.key}}`, dataUse[replacement.key]);
+        }
+    }
 
     for (const post of foundPosts.reverse()) {
         fullPromptSummary += `{'order':${totalPosts-post.index}, 'username': '${post.username}': 'content':'${post.content}'}${post.index==0 ? `]` : ','}\n`;
     };
 
-    console.log(fullPromptSummary)
 
     const startTimeOllama = checktime();
-    const ollamaResponse = await ollamaRequest(fullPromptSummary);
-    console.log(ollamaResponse.response)
+    const ollamaResponse = await ollamaRequest(fullPromptSummary, summary.model);
     const endTime = checktime();
     console.log(`Time to get total: ${endTime - startTime}ms, Time to get summary: ${endTime - startTimeOllama}ms`)
 
+    if (ollamaResponse.error) {
+        return { error: ollamaResponse.error };
+    }
+
     const structuredResponse = {
         response: ollamaResponse.response,
-        usersTotal,
+        // usersTotal,
         foundUsername,
         totalPosts,
         totalChars,
         lengthSummary,
         totalTime: endTime - startTime,
         ollamaTime: endTime - startTimeOllama,
-        foundPosts
+        modelName: summary.model,
+        versionNumber: summary.version
+    }
+
+    try {
+        await interactAISummary.create({
+            _id: UUIDv4(),
+            current: true,
+            timestamp: checktime(),
+            ...structuredResponse,
+        })
+    } catch (error) {
+        console.log(error)
     }
 
     return structuredResponse

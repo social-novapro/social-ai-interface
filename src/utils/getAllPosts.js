@@ -28,7 +28,6 @@ async function getAllPosts(postID, userID) {
     // get all posts in a conversation
     while (!foundEnd) {
         const foundPost = await getPost(nextPostID);
-        // console.log(foundPost)
         if (!foundPost) {
             break;
         }

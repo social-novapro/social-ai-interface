@@ -10,8 +10,6 @@ async function login() {
     }
 
     const userData = await fetchRequest('auth/userLogin', "GET", headers);
-
-    console.log(userData)
     
 }
 

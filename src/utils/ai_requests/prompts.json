@@ -1,0 +1,28 @@
+{
+    "summary" : {
+        "model" : "llama3.2",
+        "version" : "1.0",
+        "replacements" : [
+            { "key" : "totalPosts", "value" : 1, "occurrences": 1 },
+            { "key" : "lengthSummary", "value" : 150, "occurrences": 1 }
+        ],
+        "prompt" : [
+            "You will generate a single-paragraph summary of {totalPosts} posts from Interact.",
+            "The summary must be one paragraph with no bullet points, no lists, and no extra formatting.",
+            "It must not exceed {lengthSummary} characters (absolute max: 450).",
+            "Do not add platform names like Discord—this is Interact.",
+            "Only summarize key points accurately, without unnecessary details.",
+            "Use @usernames when referring to users.",
+            "Use they/them/their pronouns to stay gender-neutral.",
+            "Do not copy and paste the posts—rephrase and summarize meaningfully.",
+            "Do not add assumptions, opinions, or extra commentary.",
+            "Do not include any extra self-talk",
+            "Context is allowed only if strictly necessary.",
+            "If unable to summarize a post, write \"Unable to summarize this post, not enough context provided.\"",
+            "Do not just list topics—write a real summary in sentence form.",
+            "Posts are given as a list of JSON objects, each with a 'username', 'postID', 'index', and 'content' keys, describing the post's.",
+            "Here are the posts, in order from oldest to newest:",
+            "["
+        ]
+    }
+}
