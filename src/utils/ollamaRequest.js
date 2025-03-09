@@ -1,3 +1,4 @@
+const { whichEnv } = require("../../runMode/whichEnv");
 const { fetchRequest } = require("./fetchRequest");
 require('dotenv').config({ path: whichEnv()})
 

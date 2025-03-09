@@ -14,6 +14,12 @@ const { whichEnv } = require('../runMode/whichEnv');
 
 require('dotenv').config({ path: whichEnv()})
 
+app.use((req, res, next) => {
+    console.log('----');
+    console.log(req.originalUrl)
+    next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -24,9 +30,6 @@ mongoose.connect(process.env.MONGO_URL, {
 
 app.use(cors());
 app.use('/v1', APIv1);
-
-
-// fetchRequest('posts/get/thread/2f9a8cca-038c-4c19-920b-2e2f751d33ac')
 
 const server = http.createServer(app);
 server.listen(PORT, () => console.log(`Server started on port ${PORT}!`));
