@@ -87,7 +87,7 @@ async function summarizeThread({ headers, postID }) {
         foundUsername,
         totalPosts,
         totalChars,
-        lengthSummary,
+        lengthSummary: ollamaResponse.response.length,
         totalTime: endTime - startTime,
         ollamaTime: endTime - startTimeOllama,
         modelName: summary.model,

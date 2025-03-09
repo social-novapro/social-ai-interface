@@ -24,5 +24,82 @@
             "Here are the posts, in order from oldest to newest:",
             "["
         ]
+    },
+    "suggestion" : {
+        "model" : "llama3.2",
+        "version" : "1.0",
+        "replacements" : [
+            { "key" : "totalPosts", "value" : 1, "occurrences": 1 },
+            { "key" : "maxLength", "value" : 150, "occurrences": 1 },
+            { "key" : "threadPosts", "value" : "post1, post2, post3", "occurrences": 1 },
+            { "key" : "startedContent", "value" : "I think that...", "occurrences": 1 },
+            { "key" : "replyContent", "value" : "I agree with you...", "occurrences": 1 },
+            { "key" : "userPosts", "value" : "post1, post2, post3", "occurrences": 1 }
+        ],
+        "promptTypes" : [
+            {
+                "id" : 1,
+                "description" : "New post, based on user posts",
+                "needs" : ["userPosts"],
+                "extraPrompt" : [
+                    "Based on the user's posts, write a thoughtful post based on user's interests ."
+                ]
+            },
+            {
+                "id": 2,
+                "description": "New post, based on user posts, and user's started content",
+                "needs": ["userPosts", "startedContent"],
+                "extraPrompt": [
+                    "Based on the user's posts and what they started writing, write a thoughtful post based on user's interests."
+                ]
+            },
+            {
+                "id": 3,
+                "description": "New reply, based on thread, user posts, and parent post",
+                "needs": ["threadPosts", "userPosts", "replyContent"],
+                "extraPrompt": [
+                    "Based on the thread, user's posts, and what they are replying to, write a thoughtful reply based on user's interests."
+                ]
+            },
+            {
+                "id": 4,
+                "description": "New reply, based on thread, user posts, parent post, and user's started content",
+                "needs": ["threadPosts", "userPosts", "replyContent", "startedContent"],
+                "extraPrompt": [
+                    "Based on the thread, user's posts, what they are replying to, and what they started writing, write a thoughtful reply based on user's interests."
+                ]
+            }
+        ],
+        "prompt" : [
+            "You will generate a possible response to a {totalPosts} posts from Interact.",
+            "You will generate a response based on different inputs.",
+            "Your output will be placed in a creation box so client can directly upload it to Interact.",
+            "Your output must be first person in viewpoint of person writing post.",
+            "The response must be one paragraph with no bullet points, no lists, and no extra formatting.",
+            "It must not exceed {maxLength} characters (absolute max: 300).",
+            "NEVER pass 300 characters in length.",
+            "Do not add platform names like Discord—this is Interact.",
+            "Use @username when referring to users.",
+            "Use they/them/their pronouns to stay gender-neutral.",
+            "Do not blindly agree with the post—provide a thoughtful response.",
+            "Do not add assumptions, opinions, or extra commentary. Stick to the facts.",
+            "Do not include any extra self-talk",
+            "Only add opinions if they are directly requested in the post.",
+            "Add extra opinions only if they relate to user's views or feelings based on user's posts.",
+            "Do not copy and paste the posts—rephrase and create content meaningfully.",
+            "Context is allowed only if strictly necessary.",
+            "Replies will be first person in viewpoint of person writing post.",
+            "NEVER talk with the user directly, only provide suggestions for post.",
+            "NEVER ask questions to user, only provide suggestions for post.",
+            "No matter the content, always provide a thoughtful response.",
+            "Always give a response that is relevant to the user's interests.",
+            "If unable to provide a suggestion, write \"Unable to create a suggestion, not enough context provided.\"",
+            "Do not just list topics—write a real reply in sentence form.",
+            "Posts are given as a list of JSON objects, each with a 'username', 'postID', 'index', and 'content' keys, describing the post's.",
+            ":threadPosts:Here are the posts in thread, in order from oldest to newest: {threadPosts}.",
+            ":startedContent:Here is what user already started writing: {startedContent}.",
+            ":replyContent:Here is what user is directly replying to: {replyContent}.",
+            ":userPosts:Here are most recent posts from the user profile: {userPosts}."
+        ]
     }
 }
