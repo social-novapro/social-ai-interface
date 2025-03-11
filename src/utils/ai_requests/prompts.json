@@ -27,7 +27,7 @@
     },
     "suggestion" : {
         "model" : "llama3.2",
-        "version" : "1.0",
+        "version" : "1.0.1",
         "replacements" : [
             { "key" : "totalPosts", "value" : 1, "occurrences": 1 },
             { "key" : "maxLength", "value" : 150, "occurrences": 1 },
@@ -58,7 +58,8 @@
                 "description": "New reply, based on thread, user posts, and parent post",
                 "needs": ["threadPosts", "userPosts", "replyContent"],
                 "extraPrompt": [
-                    "Based on the thread, user's posts, and what they are replying to, write a thoughtful reply based on user's interests."
+                    "Based on the thread, user's posts, and what they are replying to, write a thoughtful reply based on user's interests.",
+                    "You will generate a possible post in response to a {totalPosts} posts from Interact."
                 ]
             },
             {
@@ -66,22 +67,22 @@
                 "description": "New reply, based on thread, user posts, parent post, and user's started content",
                 "needs": ["threadPosts", "userPosts", "replyContent", "startedContent"],
                 "extraPrompt": [
-                    "Based on the thread, user's posts, what they are replying to, and what they started writing, write a thoughtful reply based on user's interests."
+                    "Based on the thread, user's posts, what they are replying to, and what they started writing, write a thoughtful reply based on user's interests.",
+                    "You will generate a possible post in response to a {totalPosts} posts from Interact."
                 ]
             }
         ],
         "prompt" : [
-            "You will generate a possible response to a {totalPosts} posts from Interact.",
-            "You will generate a response based on different inputs.",
+            "You will generate a new post based on different inputs.",
             "Your output will be placed in a creation box so client can directly upload it to Interact.",
             "Your output must be first person in viewpoint of person writing post.",
-            "The response must be one paragraph with no bullet points, no lists, and no extra formatting.",
+            "Your output must be one paragraph with no bullet points, no lists, and no extra formatting.",
             "It must not exceed {maxLength} characters (absolute max: 300).",
             "NEVER pass 300 characters in length.",
             "Do not add platform names like Discord—this is Interact.",
             "Use @username when referring to users.",
             "Use they/them/their pronouns to stay gender-neutral.",
-            "Do not blindly agree with the post—provide a thoughtful response.",
+            "Do not blindly agree with the post—provide a thoughtful post.",
             "Do not add assumptions, opinions, or extra commentary. Stick to the facts.",
             "Do not include any extra self-talk",
             "Only add opinions if they are directly requested in the post.",
@@ -91,9 +92,10 @@
             "Replies will be first person in viewpoint of person writing post.",
             "NEVER talk with the user directly, only provide suggestions for post.",
             "NEVER ask questions to user, only provide suggestions for post.",
-            "No matter the content, always provide a thoughtful response.",
-            "Always give a response that is relevant to the user's interests.",
-            "If unable to provide a suggestion, write \"Unable to create a suggestion, not enough context provided.\"",
+            "No matter the content, always provide a thoughtful post.",
+            "Always give a post that is relevant to the user's interests.",
+            "Do not worry about including information about users previous posts, they are just for your information.",
+            "If unable to provide a suggestion for post, write \"Unable to create a suggestion, not enough context provided.\"",
             "Do not just list topics—write a real reply in sentence form.",
             "Posts are given as a list of JSON objects, each with a 'username', 'postID', 'index', and 'content' keys, describing the post's.",
             ":threadPosts:Here are the posts in thread, in order from oldest to newest: {threadPosts}.",
