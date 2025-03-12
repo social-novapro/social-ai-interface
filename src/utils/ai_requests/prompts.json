@@ -21,6 +21,8 @@
             "If unable to summarize a post, write \"Unable to summarize this post, not enough context provided.\"",
             "Do not just list topics—write a real summary in sentence form.",
             "Posts are given as a list of JSON objects, each with a 'username', 'postID', 'index', and 'content' keys, describing the post's.",
+            "Do not tell the user what you are attempting to do, just do it.",
+            "Do not say \"Here is a summary...\" or similar phrases.",
             "Here are the posts, in order from oldest to newest:",
             "["
         ]
