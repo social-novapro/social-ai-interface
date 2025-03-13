@@ -1,4 +1,4 @@
-const interactAISummary = require("../../schemas/interactAISummary");
+const interactAIResponse = require("../../schemas/interactAIResponse");
 const { checktime } = require("../checktime");
 const { fetchRequest } = require("../fetchRequest");
 const { ollamaRequest } = require("../ollamaRequest");
@@ -84,10 +84,11 @@ async function summarizeThread({ headers, postID }) {
     const structuredResponse = {
         response: ollamaResponse.response,
         // usersTotal,
+        generationType: "summary",
         foundUsername,
         totalPosts,
         totalChars,
-        lengthSummary: ollamaResponse.response.length,
+        responseLength: ollamaResponse.response.length,
         totalTime: endTime - startTime,
         ollamaTime: endTime - startTimeOllama,
         modelName: summary.model,
@@ -95,7 +96,7 @@ async function summarizeThread({ headers, postID }) {
     }
 
     try {
-        await interactAISummary.create({
+        await interactAIResponse.create({
             _id: UUIDv4(),
             current: true,
             timestamp: checktime(),

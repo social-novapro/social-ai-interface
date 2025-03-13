@@ -1,4 +1,4 @@
-const interactAISummary = require("../../schemas/interactAISummary");
+const interactAIResponse = require("../../schemas/interactAIResponse");
 const { checktime } = require("../checktime");
 const { fetchRequest } = require("../fetchRequest");
 const { ollamaRequest } = require("../ollamaRequest");
@@ -12,15 +12,14 @@ async function suggestionPost({ headers, postID, content }) {
     // both = based on both
 
     // if postID, get post and replies
-    const threadPosts = await fetchRequest(`posts/get/thread/${postID}`, "GET", headers);
+    const threadPosts = postID ? await fetchRequest(`posts/get/thread/${postID}`, "GET", headers) : null;
     const userPosts = await fetchRequest(`users/get/userPosts/u/${headers.userID}`, "GET", headers);
-    
-    var prompt = null;
+
     var promptType = 0
     var promptDataUse = {
         userPosts: [],
         threadPosts: [],
-        startedContent: content,
+        startedContent: content ? `\'${content}\'` : null,
         replyContent: postID ? threadPosts.post.postData.content : null,
         userPostsAmount: 0,
         totalPosts: 0,
@@ -38,12 +37,10 @@ async function suggestionPost({ headers, postID, content }) {
         promptDataUse.userPostsAmount++;
     }
 
-
-
     var foundPosts = [];
     var totalChars = 0;
     var totalPosts = 0;
-    var foundUsername = null;
+    var foundUsername = userPosts.posts[0].userData.username;
     var usersTotal = {};
     var totalPosts = 0;
 
@@ -85,7 +82,6 @@ async function suggestionPost({ headers, postID, content }) {
             totalChars += foundPost.postData.content.length;
         }
 
-        // console.log(content, content.length)
         if (!content || content?.length == 0) {
             promptType = 3;
         }
@@ -113,10 +109,11 @@ async function suggestionPost({ headers, postID, content }) {
     const structuredResponse = {
         response: ollamaResponse.response,
         // usersTotal,
+        generationType: "suggestion",
         foundUsername,
         totalPosts,
         totalChars,
-        lengthSuggestion: ollamaResponse.response.length,
+        responseLength: ollamaResponse.response.length,
         totalTime: endTime - startTime,
         ollamaTime: endTime - startTimeOllama,
         modelName: suggestion.model,
@@ -125,12 +122,12 @@ async function suggestionPost({ headers, postID, content }) {
     }
 
     try {
-        // await interactAISummary.create({
-        //     _id: UUIDv4(),
-        //     current: true,
-        //     timestamp: checktime(),
-        //     ...structuredResponse,
-        // })
+        await interactAIResponse.create({
+            _id: UUIDv4(),
+            current: true,
+            timestamp: checktime(),
+            ...structuredResponse,
+        })
     } catch (error) {
         console.log(error)
     }
@@ -138,93 +135,7 @@ async function suggestionPost({ headers, postID, content }) {
     return structuredResponse;
 }
 
-/*
 function generateSuggestionPrompt({ dataUse, typeSuggestion }) {
-    // console.log(dataUse.userPosts)
-    var fullPrompt = [];
-    // based on type, remove/add
-    var finalPromptArr = [];
-    const promptType = suggestion.promptTypes[typeSuggestion-1];
-
-    for (const extra of promptType.extraPrompt) {
-        fullPrompt.push(extra);
-    }
-
-    fullPrompt = [...fullPrompt, ...suggestion.prompt];
-    // console.log(fullPrompt)
-
-    for (var prompt of fullPrompt) {
-        // console.log(prompt.startsWith(":"))
-        // start
-        if (prompt.startsWith(":")) {
-            // console.log(prompt)
-            // remove or add info
-            // if (prompt.
-            var neededSub = false
-            var needName = prompt.split(":")[1];
-            for (const need of promptType.needs) {
-                if (prompt.startsWith(`:${need}:`)) {
-                    neededSub = true;
-                    prompt = prompt.replace(`:${need}:`, "");
-                    // console.log(prompt)
-                    break;
-                } 
-            }
-            if (neededSub) {
-                // prompt = prompt.replace(`{${needName}}`, dataUse[needName]);
-                finalPromptArr.push(prompt);
-            }
-        } else {
-            finalPromptArr.push(prompt);
-        }
-    }
-
-
-    console.log('---')
-    var fullPromptSuggestion = finalPromptArr.join('\n');
-
-    for (const replacement of suggestion.replacements) {
-        // console.log(replacement)
-        for (var i=0; i<replacement.occurrences; i++) {
-            fullPromptSuggestion = fullPromptSuggestion.replace(`{${replacement.key}}`, dataUse[replacement.key]);
-            // console.log(replacement.key)
-            if (replacement.key == "threadPosts" || replacement.key == "userPosts") {
-                var usingTotal = replacement.key == "threadPosts" ? dataUse.totalPosts : dataUse.userPostsAmount;
-                // console.log(dataUse[replacement.key])
-                var postsPrompt = [];
-                for (const post of replacement.key == "threadPosts" ? dataUse.threadPosts.reverse() : dataUse.userPosts.reverse()) {
-                    // console.log(post)
-                    postsPrompt.push({
-                        order: usingTotal-post.index,
-                        username: post.username,
-                        content: post.content
-                    })
-                    // postsPrompt.push(`{'order':${usingTotal-post.index}, 'username':'${post.username}':'content':'${post.content}'}`);
-                };
-                const postsPromptString = JSON.stringify(postsPrompt, null, 2);
-
-                console.log(postsPrompt)
-
-                // typeof postsPrompt == "string" ? postsPrompt = postsPrompt : postsPrompt = postsPrompt.join('\n');
-                fullPromptSuggestion = fullPromptSuggestion.replace(`{${replacement.key}}`, postsPromptString);
-                // console.log(fullPromptSuggestion)
-                console.log(postsPromptString);
-            }
-        }
-    }
-
-    // for (const post of dataUse.threadPosts.reverse()) {
-    //     fullPromptSuggestion += `{'order':${dataUse.totalPosts-post.index}, 'username': '${post.username}': 'content':'${post.content}'}${post.index==0 ? `]` : ','}\n`;
-    // };
-    console.log('---')
-
-    console.log(fullPromptSuggestion)
-    return fullPromptSuggestion;
-}
-*/
-function generateSuggestionPrompt({ dataUse, typeSuggestion }) {
-    console.log("dataUse", dataUse)
-    console.log("typeSuggestion", typeSuggestion)
     var fullPrompt = [];
     var finalPromptArr = [];
     const promptType = suggestion.promptTypes[typeSuggestion - 1];
@@ -260,9 +171,7 @@ function generateSuggestionPrompt({ dataUse, typeSuggestion }) {
         if (replacement.key == "threadPosts" || replacement.key == "userPosts") {
             var usingTotal = replacement.key == "threadPosts" ? dataUse.totalPosts : dataUse.userPostsAmount;
             var postsPrompt = [];
-            console.log(replacement.key)
-            console.log(dataUse[replacement.key])
-            console.log(dataUse.threadPosts)
+
             for (const post of replacement.key == "threadPosts" ? dataUse.threadPosts.reverse() : dataUse.userPosts.reverse()) {
                 postsPrompt.push({
                     order: usingTotal - post.index,
@@ -277,8 +186,6 @@ function generateSuggestionPrompt({ dataUse, typeSuggestion }) {
         }
     }
 
-    console.log('---');
-    console.log(fullPromptSuggestion);
     return fullPromptSuggestion;
 }
 

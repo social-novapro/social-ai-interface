@@ -41,11 +41,14 @@ You are created to summarize posts on interact. You will summarize the conversta
 fullPromptSummary += `${post.username} said: ${post.content}.\n
 ```
 
-install and run ollama in a docker container
+install / update and run ollama in a docker container
 ```
 docker pull ollama/ollama
 
 docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 
 docker exec -it ollama ollama run llama3.2
+
+
+docker exec -it ollama ollama run gemma3
 ```

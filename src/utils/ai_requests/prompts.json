@@ -1,6 +1,6 @@
 {
     "summary" : {
-        "model" : "llama3.2",
+        "model" : "gemma3",
         "version" : "1.0",
         "replacements" : [
             { "key" : "totalPosts", "value" : 1, "occurrences": 1 },
@@ -28,8 +28,8 @@
         ]
     },
     "suggestion" : {
-        "model" : "llama3.2",
-        "version" : "1.0.1",
+        "model" : "gemma3",
+        "version" : "1.01",
         "replacements" : [
             { "key" : "totalPosts", "value" : 1, "occurrences": 1 },
             { "key" : "maxLength", "value" : 150, "occurrences": 1 },
@@ -101,7 +101,8 @@
             "Do not just list topics—write a real reply in sentence form.",
             "Posts are given as a list of JSON objects, each with a 'username', 'postID', 'index', and 'content' keys, describing the post's.",
             ":threadPosts:Here are the posts in thread, in order from oldest to newest: {threadPosts}.",
-            ":startedContent:Here is what user already started writing: {startedContent}.",
+            ":startedContent:Here is what user already started writing as a post: {startedContent}.",
+            ":startedContent:Make sure to envolve what the user started writing, this is what they want to talk about.",
             ":replyContent:Here is what user is directly replying to: {replyContent}.",
             ":userPosts:Here are most recent posts from the user profile: {userPosts}."
         ]
