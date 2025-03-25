@@ -26,6 +26,7 @@ npm start
 ```
 ```
 docker stop social-ai-interface && docker rm social-ai-interface && docker build -t novapro/interact_ai_interface . && docker run --name social-ai-interface --gpus all -p 5004:5004 novapro/interact_ai_interface 
+docker build -t novapro/interact_ai_interface . && docker run --name social-ai-interface --gpus all -p 5004:5004 novapro/interact_ai_interface 
 ```
 check out 
 http://localhost:5004/v1/serverStatus
