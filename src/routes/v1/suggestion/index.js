@@ -6,7 +6,6 @@ const { reqToHeaders } = require('../../../utils/reqToHeaders');
 // POST /suggestion
 // suggestion based on own profile, or on content already started
 router.post('/', async (req, res) => {
-    console.log(req.body)
     const headers = reqToHeaders(req);
     const suggestion = await suggestionPost({ headers, content: req.body.content?? null });
 
