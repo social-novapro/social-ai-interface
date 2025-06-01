@@ -106,5 +106,32 @@
             ":replyContent:Here is what user is directly replying to: {replyContent}.",
             ":userPosts:Here are most recent posts from the user profile: {userPosts}."
         ]
+    },
+    "categoryExample" : {
+        "model" : "gemma3",
+        "version" : "1.0",
+        "replacements" : [
+            { "key" : "categoryName", "value" : "here", "occurrences": 1 },
+            { "key" : "examples", "value" : "example1, example2, example3", "occurrences": 1 }
+        ],
+        "prompt" : [
+            "You will generate an example post for a category.",
+            "The category is {categoryName}.",
+            "The post must be one paragraph with no bullet points, no lists, and no extra formatting.",
+            "The post must not exceed 150 characters (absolute max: 300).",
+            "NEVER pass 300 characters in length.",
+            "The post must be 1 to 3 sentences long.",
+            "The post must be relevant to the category.",
+            "The post not copy other examples provided, it must be unique.",
+            "These examples will be used to help users understand what kind of posts are expected in this category.",
+            "Do not add platform names like Discord—this is Interact.",
+            "Do not refer to other users or usernames.",
+            "Use they/them/their pronouns if needed",
+            "Do not add assumptions, opinions, or extra commentary.",
+            "Do not include any extra self-talk",
+            "Do not repeat your instructions or say what you are doing.",
+            "Do not say \"Here is an example post...\" or similar phrases.",
+            "Here are previous examples generated: {examples}"
+        ]
     }
 }
