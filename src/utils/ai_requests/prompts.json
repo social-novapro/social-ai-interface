@@ -109,7 +109,7 @@
     },
     "categoryExample" : {
         "model" : "gemma3",
-        "version" : "1.0",
+        "version" : "1.11",
         "replacements" : [
             { "key" : "categoryName", "value" : "here", "occurrences": 1 },
             { "key" : "examples", "value" : "example1, example2, example3", "occurrences": 1 }
@@ -132,6 +132,19 @@
             "Do not repeat your instructions or say what you are doing.",
             "Do not say \"Here is an example post...\" or similar phrases.",
             "Here are previous examples generated: {examples}"
+        ],
+        "prompt_test": [
+            "Generate a unique example of a short social media post in the category: {categoryName}.",
+            "It should sound like a real user sharing something personal, casual, and expressive.",
+            "Avoid repeating structures or tone from examples provided. Keep sentence rhythm and phrasing varied.",
+            "Do not use lists, usernames, hashtags, or platform names. Avoid 'this platform' or 'this app'.",
+            "Avoid critique language (e.g., 'hypnotic', 'captivating') and analysis. Focus on natural reaction or process.",
+            "Write in the first person if it makes sense. Be expressive, but not exaggerated or poetic.",
+            "Max 150 characters preferred, 300 characters hard cap.",
+            "Each output should be noticeably different in rhythm, sentence structure, and emotional tone from the last.",
+            "Do not say \"Here is an example post...\", \"following your guidelines\" or similar phrases.",
+            "Do not copy or mimic these example: {examples}",
+            "Output only the post text, with no explanations, no commentary, no formatting (\\n, *), and no emojis."
         ]
     }
 }

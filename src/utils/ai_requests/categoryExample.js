@@ -4,7 +4,7 @@ const { v4: UUIDv4 } = require('uuid');
 const { ollamaRequest } = require("../ollamaRequest");
 const { categoryExample } = require("./prompts.json");
 
-const EXAMPLE_COUNT = 5;
+const EXAMPLE_COUNT = 10;
 
 async function generateExamples(categoryName) {
     const generatedExamples = [];
