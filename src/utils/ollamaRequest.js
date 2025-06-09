@@ -7,7 +7,8 @@ async function ollamaRequest(prompt, model="llama3.2") {
         model: model,
         prompt: prompt,
         stream: false,
-        keep_alive: -1
+        keep_alive: -1,
+        think: false
     };
 
     const ollamaResponse = await fetchRequest("/api/generate", "POST", {}, body, process.env.OLLAMA_URL); 

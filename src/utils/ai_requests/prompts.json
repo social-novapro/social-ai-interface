@@ -108,8 +108,9 @@
         ]
     },
     "categoryExample" : {
-        "model" : "gemma3",
-        "version" : "1.11",
+        "model": "gemma3",
+        "model_test" : "deepseek-r1:1.5b-qwen-distill-fp16",
+        "version" : "1.13",
         "replacements" : [
             { "key" : "categoryName", "value" : "here", "occurrences": 1 },
             { "key" : "examples", "value" : "example1, example2, example3", "occurrences": 1 }
@@ -130,6 +131,7 @@
             "Do not add assumptions, opinions, or extra commentary.",
             "Do not include any extra self-talk",
             "Do not repeat your instructions or say what you are doing.",
+            "Each output should be noticeably different in rhythm, sentence structure, and emotional tone from the last.",
             "Do not say \"Here is an example post...\" or similar phrases.",
             "Here are previous examples generated: {examples}"
         ],
